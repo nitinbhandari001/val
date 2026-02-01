@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Thank you, Flappy bird! 💕🐦">
+  <meta name="theme-color" content="#ff69b4">
+  
+  <title>Thank You, Flappy Bird! 💕🐦</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐦</text></svg>">
+  
+  <style>
+    /* Moonshine-inspired styles with modern touch */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      min-height: 100vh;
+      background-color: #fff5e4;
+      background: linear-gradient(180deg, #fff5e4 0%, #ffe8f0 50%, #ffd6e8 100%);
+      color: #ff9494;
+      font-family: 'Poppins', 'Courier Prime', 'Courier', monospace;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Thank You Title */
+    #thankyou {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      margin-bottom: 10px;
+      color: #ff6b8a;
+      text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+      animation: fadeInDown 0.8s ease;
+    }
+    
+    /* Personalized subtitle */
+    .subtitle {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      color: #ff9494;
+      margin-bottom: 20px;
+      animation: fadeInDown 0.8s ease 0.2s backwards;
+    }
+    
+    .subtitle .bird {
+      display: inline-block;
+      animation: flap 0.5s ease-in-out infinite;
+    }
+    
+    @keyframes flap {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    /* Stats Section */
+    .stats-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 350px;
+      box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
+      animation: fadeInUp 0.8s ease 0.3s backwards;
+    }
+    
+    .stats-card .chase-text {
+      font-size: 1rem;
+      color: #ff9494;
+    }
+    
+    .stats-card .chase-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #ff6b8a;
+      display: block;
+      margin: 10px 0;
+    }
+    
+    .stats-card .chase-emoji {
+      font-size: 1.5rem;
+    }
+    
+    /* Image */
+    .thanks-image {
+      max-width: 300px;
+      height: auto;
+      margin: 20px auto;
+      display: block;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+    }
+    
+    /* Message */
+    .message {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      color: #ff6b8a;
+      margin: 20px 0;
+      font-weight: 600;
+      animation: fadeInUp 0.8s ease 0.5s backwards;
+    }
+    
+    /* Audio Section */
+    .audio-section {
+      margin: 20px 0;
+      animation: fadeInUp 0.8s ease 0.6s backwards;
+    }
+    
+    .audio-section p {
+      font-size: 0.9rem;
+      color: #ff9494;
+      margin-bottom: 10px;
+    }
+    
+    audio {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 30px;
+    }
+    
+    /* Music Toggle Button */
+    .music-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #ffb6c1;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .music-toggle:hover {
+      transform: scale(1.1);
+      background: #ffb6c1;
+    }
+    
+    .music-toggle.playing {
+      animation: musicPulse 1s ease infinite;
+    }
+    
+    @keyframes musicPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 105, 180, 0); }
+    }
+    
+    /* Continue Button */
+    .button {
+      display: inline-block;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-family: inherit;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff9494, #ff6b8a);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      animation: fadeInUp 0.8s ease 0.7s backwards, bounce 2s ease infinite 1.5s;
+    }
+    
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+      background: linear-gradient(135deg, #ff6b8a, #ff4d6d);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+    
+    /* Floating Hearts */
+    .floating-heart {
+      position: fixed;
+      bottom: -50px;
+      font-size: 24px;
+      animation: floatUp 4s linear forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .thanks-image {
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Music Toggle Button -->
+  <button id="musicToggle" class="music-toggle" aria-label="Toggle music">
+    🔊
+  </button>
+
+  <div class="container">
+    <!-- Thank You Title -->
+    <div id="thankyou"><b>Thank You!</b></div>
+    
+    <!-- Personalized Subtitle -->
+    <p class="subtitle">
+      I knew my <span class="bird">🐦</span> Flappy bird would say yes! 💖
+    </p>
+    
+    <!-- Stats Card -->
+    <div class="stats-card">
+      <span class="chase-text">You made me chase you</span>
+      <span id="chaseCount" class="chase-number">0</span>
+      <span class="chase-text">times before saying yes!</span>
+      <span class="chase-emoji">😄🐦💕</span>
+    </div>
+    
+    <!-- Thank You Image -->
+    <img 
+      src="assets/images/thanks.png" 
+      alt="Thank you celebration" 
+      class="thanks-image"
+      onerror="this.src='assets/gifs/thanks.gif'; this.onerror=null;"
+    >
+    
+    <!-- Message -->
+    <h1 class="message">Don't go yet, Nainika! 💕</h1>
+    
+    <!-- Audio Section with Controls -->
+    <div class="audio-section">
+      <audio id="bgMusic" controls loop>
+        <source src="assets/audio/congratulations.mp3" type="audio/mpeg">
+        <source src="assets/audio/bg-love-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    
+    <!-- Continue Button -->
+    <button class="button" onclick="goToDate()">
+      Let's plan our date! 💕
+    </button>
+  </div>
+
+  <!-- Page Transition Overlay -->
+  <div id="transitionOverlay" style="
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ff9494, #ff6b8a);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  ">
+    <span style="font-size: 80px; animation: bounce 1s ease infinite;">🐦💕</span>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  
+  <script>
+    // Get saved data
+    const data = Navigation.getData();
+    
+    // Display chase count
+    const chaseCountEl = document.getElementById('chaseCount');
+    if (chaseCountEl && data.noClickCount !== undefined) {
+      chaseCountEl.textContent = data.noClickCount;
+    }
+    
+    // Audio handling
+    const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    let isPlaying = false;
+    
+    // Try to auto-play (will fail due to browser policies, but we try)
+    function tryAutoPlay() {
+      bgMusic.volume = 0.5;
+      const playPromise = bgMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            isPlaying = true;
+            musicToggle.textContent = '🔊';
+            musicToggle.classList.add('playing');
+            console.log('Audio auto-play successful!');
+          })
+          .catch(error => {
+            console.log('Auto-play prevented. User must interact first.');
+            isPlaying = false;
+            musicToggle.textContent = '🔇';
+          });
+      }
+    }
+    
+    // Try auto-play after a short delay
+    setTimeout(tryAutoPlay, 500);
+    
+    // Music toggle button
+    musicToggle.addEventListener('click', () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        isPlaying = false;
+        musicToggle.textContent = '🔇';
+        musicToggle.classList.remove('playing');
+      } else {
+        bgMusic.play().then(() => {
+          isPlaying = true;
+          musicToggle.textContent = '🔊';
+          musicToggle.classList.add('playing');
+        }).catch(console.log);
+      }
+    });
+    
+    // Also try to play on first user interaction
+    document.addEventListener('click', function firstClick() {
+      if (!isPlaying) {
+        tryAutoPlay();
+      }
+      document.removeEventListener('click', firstClick);
+    }, { once: true });
+    
+    // Navigate to date page
+    function goToDate() {
+      const overlay = document.getElementById('transitionOverlay');
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'all';
+      
+      setTimeout(() => {
+        window.location.href = 'date.html';
+      }, 500);
+    }
+    
+    // Floating hearts
+    function createHeart() {
+      const emojis = ['💖', '💕', '💗', '🐦', '❤️', '💓'];
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (16 + Math.random() * 20) + 'px';
+      heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+      document.body.appendChild(heart);
+      
+      setTimeout(() => heart.remove(), 5000);
+    }
+    
+    // Start floating hearts
+    setInterval(createHeart, 400);
+    
+    // Create initial batch
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createHeart, i * 100);
+    }
+  </script>
+</body>
+</html>

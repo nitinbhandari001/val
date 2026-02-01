@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Our Valentine's Date Plan 💕">
+  <meta name="theme-color" content="#ff69b4">
+  
+  <title>Our Date Plan 💕</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+</head>
+<body>
+  <!-- Audio Toggle Button -->
+  <button id="audioToggle" class="audio-toggle" aria-label="Toggle music">
+    🔇
+  </button>
+
+  <!-- Background Music -->
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="assets/audio/bg-love-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Content -->
+  <main class="page-wrapper">
+    <div class="lastpage" id="summaryContent">
+      <!-- Header - Personalized for Flappy bird -->
+      <h1 class="animate-on-load">Our Perfect Date, Flappy Bird! 🐦💕</h1>
+      
+      <!-- Chase Stat -->
+      <div class="chase-stat animate-on-load delay-1">
+        <span class="text">My Flappy bird made me chase her</span>
+        <span id="chaseCount" class="number">0</span>
+        <span class="text">times before saying yes! 😄🐦💕</span>
+      </div>
+
+      <!-- Countdown Section -->
+      <div class="countdown-section animate-on-load delay-2">
+        <h2>Countdown to Our Date ⏰</h2>
+        <p id="dateDisplay" class="date-display">Loading...</p>
+        
+        <div id="countdown" class="countdown">
+          <div class="countdown-item">
+            <span id="days" class="number">0</span>
+            <span class="label">Days</span>
+          </div>
+          <div class="countdown-item">
+            <span id="hours" class="number">0</span>
+            <span class="label">Hours</span>
+          </div>
+          <div class="countdown-item">
+            <span id="minutes" class="number">0</span>
+            <span class="label">Minutes</span>
+          </div>
+          <div class="countdown-item">
+            <span id="seconds" class="number">0</span>
+            <span class="label">Seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Food Summary -->
+      <div class="summary-section animate-on-load delay-3" id="foodSummary">
+        <h3>🍽️ What We'll Eat</h3>
+        <div id="foodItems" class="items">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Dessert Summary -->
+      <div class="summary-section animate-on-load delay-3" id="dessertSummary">
+        <h3>🍰 Sweet Treats</h3>
+        <div id="dessertItems" class="items">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Activities Summary -->
+      <div class="summary-section animate-on-load delay-3" id="activitiesSummary">
+        <h3>🎯 Our Activities</h3>
+        <div id="activityItems" class="items">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Final Message - Personalized -->
+      <div class="final-message animate-on-load delay-4">
+        <p id="finalMessage">Thank you for being my Valentine, Flappy bird! 🐦<br>Every moment with you is magical, Nainika! 💖</p>
+      </div>
+
+      <!-- Share Buttons -->
+      <div class="share-buttons animate-on-load delay-4">
+        <button id="whatsappShare" class="share-btn whatsapp">
+          📱 Share on WhatsApp
+        </button>
+        <button id="screenshotBtn" class="share-btn screenshot">
+          📸 Save as Image
+        </button>
+      </div>
+
+      <!-- Reset Section -->
+      <div class="reset-section animate-on-load delay-4">
+        <p style="color: var(--text-secondary); font-size: var(--font-sm); margin-bottom: 0.5rem;">
+          Want to start over?
+        </p>
+        <button id="resetBtn" class="reset-btn">
+          🔄 Reset & Start Again
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay">
+    <div class="transition-heart">💕</div>
+  </div>
+
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  
+  <!-- HTML2Canvas for Screenshot -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  
+  <!-- Application Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  
+  <script>
+    /**
+     * Last Page (Summary) Logic
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      Utils.log('Last page loaded');
+      
+      // Get all saved data
+      const summary = Navigation.getSummary();
+      Utils.log('Summary data:', 'log', summary);
+      
+      // Populate chase count
+      const chaseCount = Utils.$('#chaseCount');
+      if (chaseCount) {
+        chaseCount.textContent = summary.noClickCount;
+      }
+      
+      // Populate date
+      const dateDisplay = Utils.$('#dateDisplay');
+      if (dateDisplay) {
+        dateDisplay.textContent = summary.formattedDate;
+      }
+      
+      // Start countdown
+      if (summary.date) {
+        startCountdown(summary.date);
+      } else {
+        // Hide countdown if no date selected
+        const countdownSection = Utils.$('.countdown-section');
+        if (countdownSection) {
+          countdownSection.style.display = 'none';
+        }
+      }
+      
+      // Populate food items
+      populateSection('foodItems', summary.food, CONFIG.foodOptions, 'foodSummary');
+      
+      // Populate dessert items
+      populateSection('dessertItems', summary.dessert, CONFIG.dessertOptions, 'dessertSummary');
+      
+      // Populate activity items
+      populateSection('activityItems', summary.activities, CONFIG.activityOptions, 'activitiesSummary');
+      
+      // Set final message
+      const finalMessage = Utils.$('#finalMessage');
+      if (finalMessage) {
+        finalMessage.textContent = CONFIG.finalMessage;
+      }
+      
+      // Setup share buttons
+      setupShareButtons();
+      
+      // Setup reset button
+      const resetBtn = Utils.$('#resetBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (confirm('Are you sure you want to start over? All your selections will be lost! 💔')) {
+            Navigation.reset();
+          }
+        });
+      }
+      
+      // Trigger celebration
+      setTimeout(() => {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 },
+            colors: CONFIG.animations.confetti.colors
+          });
+        }
+      }, 500);
+      
+      // Setup audio
+      setupAudio();
+      
+      // Floating hearts
+      startFloatingHearts();
+    });
+    
+    /**
+     * Populate a summary section with items
+     */
+    function populateSection(containerId, selectedIds, options, sectionId) {
+      const container = Utils.$(`#${containerId}`);
+      const section = Utils.$(`#${sectionId}`);
+      
+      if (!container) return;
+      
+      if (!selectedIds || selectedIds.length === 0) {
+        // Hide section if nothing selected
+        if (section) {
+          section.style.display = 'none';
+        }
+        return;
+      }
+      
+      // Find matching options and create tags
+      selectedIds.forEach(id => {
+        const option = options.find(opt => opt.id === id);
+        if (option) {
+          const tag = Utils.createElement('span', {
+            className: 'item-tag'
+          }, option.label);
+          container.appendChild(tag);
+        }
+      });
+    }
+    
+    /**
+     * Start countdown timer
+     */
+    function startCountdown(targetDate) {
+      const daysEl = Utils.$('#days');
+      const hoursEl = Utils.$('#hours');
+      const minutesEl = Utils.$('#minutes');
+      const secondsEl = Utils.$('#seconds');
+      
+      function updateCountdown() {
+        const remaining = Utils.getTimeRemaining(targetDate);
+        
+        if (remaining.isPast) {
+          // Date has passed
+          daysEl.textContent = '🎉';
+          hoursEl.textContent = "It's";
+          minutesEl.textContent = 'Date';
+          secondsEl.textContent = 'Day!';
+          return;
+        }
+        
+        daysEl.textContent = remaining.days;
+        hoursEl.textContent = remaining.hours;
+        minutesEl.textContent = remaining.minutes;
+        secondsEl.textContent = remaining.seconds;
+      }
+      
+      // Update immediately
+      updateCountdown();
+      
+      // Update every second
+      setInterval(updateCountdown, 1000);
+    }
+    
+    /**
+     * Setup share buttons
+     */
+    function setupShareButtons() {
+      // WhatsApp Share
+      const whatsappBtn = Utils.$('#whatsappShare');
+      if (whatsappBtn) {
+        whatsappBtn.addEventListener('click', () => {
+          const summary = Navigation.getSummary();
+          const message = `${CONFIG.sharing.shareMessage}\n\n` +
+            `💕 Our Valentine's Date Plan:\n` +
+            `📅 Date: ${summary.formattedDate}\n` +
+            `🍽️ Food: ${summary.food.join(', ') || 'Surprise!'}\n` +
+            `🍰 Dessert: ${summary.dessert.join(', ') || 'Surprise!'}\n` +
+            `🎯 Activities: ${summary.activities.join(', ') || 'Surprise!'}\n\n` +
+            `They said YES after ${summary.noClickCount} attempts! 😄`;
+          
+          const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+          window.open(url, '_blank');
+          
+          Utils.log('Shared on WhatsApp');
+        });
+      }
+      
+      // Screenshot
+      const screenshotBtn = Utils.$('#screenshotBtn');
+      if (screenshotBtn) {
+        screenshotBtn.addEventListener('click', async () => {
+          const content = Utils.$('#summaryContent');
+          
+          if (!content) return;
+          
+          try {
+            // Add class to hide buttons during screenshot
+            content.classList.add('screenshot-mode');
+            
+            // Capture screenshot
+            const canvas = await html2canvas(content, {
+              backgroundColor: '#fff0f5',
+              scale: 2,
+              logging: false
+            });
+            
+            // Remove screenshot mode
+            content.classList.remove('screenshot-mode');
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = 'valentine-date-plan.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            Utils.log('Screenshot saved');
+            
+            // Celebration
+            if (typeof confetti === 'function') {
+              confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.7 }
+              });
+            }
+          } catch (err) {
+            Utils.logError('Screenshot failed', err);
+            alert('Failed to save screenshot. Please try again.');
+          }
+        });
+      }
+    }
+    
+    /**
+     * Setup audio toggle
+     */
+    function setupAudio() {
+      const audioToggle = Utils.$('#audioToggle');
+      const backgroundMusic = Utils.$('#backgroundMusic');
+      
+      if (audioToggle && backgroundMusic) {
+        const isMuted = Utils.loadData('musicPreference', true);
+        backgroundMusic.muted = isMuted;
+        backgroundMusic.volume = CONFIG.audio.volume;
+        audioToggle.textContent = isMuted ? '🔇' : '🔊';
+        audioToggle.classList.toggle('muted', isMuted);
+        
+        audioToggle.addEventListener('click', () => {
+          const newMuted = !backgroundMusic.muted;
+          backgroundMusic.muted = newMuted;
+          if (!newMuted) backgroundMusic.play().catch(console.log);
+          Utils.saveData('musicPreference', newMuted);
+          audioToggle.textContent = newMuted ? '🔇' : '🔊';
+          audioToggle.classList.toggle('muted', newMuted);
+        });
+      }
+    }
+    
+    /**
+     * Start floating hearts
+     */
+    function startFloatingHearts() {
+      if (CONFIG.animations.floatingHearts.enabled) {
+        const settings = CONFIG.animations.floatingHearts;
+        setInterval(() => {
+          const emoji = Utils.randomFrom(settings.emojis);
+          const heart = Utils.createElement('div', {
+            className: 'floating-heart medium',
+            style: { left: `${Math.random() * 100}vw` }
+          }, emoji);
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), settings.duration);
+        }, settings.interval);
+      }
+    }
+  </script>
+  
+  <style>
+    /* Screenshot mode - hide interactive elements */
+    .screenshot-mode .share-buttons,
+    .screenshot-mode .reset-section,
+    .screenshot-mode .audio-toggle {
+      display: none !important;
+    }
+    
+    .screenshot-mode {
+      padding: 2rem;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f5);
+    }
+  </style>
+</body>
+</html>

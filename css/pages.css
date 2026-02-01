@@ -1,0 +1,451 @@
+/**
+ * ============================================
+ * VALENTINE'S DAY WEBSITE - PAGE-SPECIFIC STYLES
+ * ============================================
+ * 
+ * Styles specific to each page in the multi-page flow.
+ */
+
+/* ==========================================
+   THANK YOU PAGE
+   ========================================== */
+.thankyou-page {
+  text-align: center;
+}
+
+.thankyou-page .celebration-gif {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 2rem;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+}
+
+.thankyou-page .celebration-gif img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thankyou-page h1 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.thankyou-page .subtitle {
+  font-size: var(--font-xl);
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.thankyou-page .stats {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1.5rem;
+  border-radius: var(--radius-medium);
+  margin-bottom: 2rem;
+}
+
+.thankyou-page .stats-text {
+  font-size: var(--font-lg);
+  color: var(--text-primary);
+}
+
+.thankyou-page .stats-number {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ==========================================
+   DATE SELECTION PAGE
+   ========================================== */
+.date-page {
+  text-align: center;
+}
+
+.date-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.date-page .subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.date-page .date-picker-wrapper {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
+  max-width: 400px;
+  margin: 0 auto 2rem;
+}
+
+.date-page .date-picker-wrapper label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.date-page input[type="date"] {
+  width: 100%;
+  padding: 1rem;
+  font-size: var(--font-lg);
+  border: 2px solid var(--color-primary-light);
+  border-radius: var(--radius-medium);
+  background: white;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.date-page input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+}
+
+/* Custom date suggestions */
+.date-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.date-suggestion {
+  padding: 0.5rem 1rem;
+  background: var(--color-primary-light);
+  border: none;
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+}
+
+.date-suggestion:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* ==========================================
+   FOOD SELECTION PAGE
+   ========================================== */
+.food-page {
+  text-align: center;
+}
+
+.food-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.food-page .subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.food-page .hint {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* ==========================================
+   DESSERT SELECTION PAGE
+   ========================================== */
+.dessert-page {
+  text-align: center;
+}
+
+.dessert-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.dessert-page .subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.dessert-page .hint {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* ==========================================
+   ACTIVITIES PAGE
+   ========================================== */
+.activities-page {
+  text-align: center;
+}
+
+.activities-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.activities-page .subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.activities-page .hint {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* ==========================================
+   LAST PAGE (SUMMARY)
+   ========================================== */
+.lastpage {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.lastpage h1 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.lastpage .chase-stat {
+  background: linear-gradient(135deg, var(--color-primary-light), white);
+  padding: 1.5rem;
+  border-radius: var(--radius-large);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.lastpage .chase-stat .number {
+  font-size: var(--font-4xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  display: block;
+}
+
+.lastpage .chase-stat .text {
+  font-size: var(--font-lg);
+  color: var(--text-primary);
+}
+
+/* Date Countdown Section */
+.lastpage .countdown-section {
+  margin: 2rem 0;
+}
+
+.lastpage .countdown-section h2 {
+  font-size: var(--font-xl);
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.lastpage .date-display {
+  font-size: var(--font-2xl);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+/* Summary Sections */
+.lastpage .summary-section {
+  background: white;
+  border-radius: var(--radius-large);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+.lastpage .summary-section h3 {
+  font-size: var(--font-lg);
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lastpage .summary-section .items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lastpage .summary-section .item-tag {
+  background: var(--color-primary-light);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-round);
+  font-size: var(--font-sm);
+}
+
+/* Final Message */
+.lastpage .final-message {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  padding: 2rem;
+  border-radius: var(--radius-large);
+  margin: 2rem 0;
+}
+
+.lastpage .final-message p {
+  font-size: var(--font-xl);
+  margin: 0;
+}
+
+/* Action Buttons */
+.lastpage .action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.lastpage .action-buttons .btn {
+  width: 100%;
+}
+
+/* Reset Button */
+.lastpage .reset-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-primary-light);
+}
+
+.lastpage .reset-btn {
+  background: transparent;
+  border: 2px solid var(--btn-no);
+  color: var(--btn-no);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  font-size: var(--font-sm);
+  transition: all var(--transition-normal);
+}
+
+.lastpage .reset-btn:hover {
+  background: var(--btn-no);
+  color: white;
+}
+
+/* ==========================================
+   NAVIGATION BETWEEN PAGES
+   ========================================== */
+.page-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+.page-navigation .btn-back {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.page-navigation .btn-back:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.page-navigation .btn-next {
+  background: var(--color-primary);
+  color: white;
+}
+
+.page-navigation .btn-next:hover {
+  background: var(--color-primary-dark);
+}
+
+.page-navigation .btn-next:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   PAGE INDICATORS
+   ========================================== */
+.page-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.page-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  transition: all var(--transition-normal);
+}
+
+.page-indicator.active {
+  background: var(--color-primary);
+  transform: scale(1.2);
+}
+
+.page-indicator.completed {
+  background: var(--btn-yes);
+}
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.empty-state .icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  font-size: var(--font-lg);
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE FOR PAGES
+   ========================================== */
+@media (max-width: 768px) {
+  .thankyou-page .celebration-gif {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .date-page .date-picker-wrapper {
+    padding: 1.5rem;
+  }
+  
+  .lastpage .chase-stat .number {
+    font-size: var(--font-3xl);
+  }
+  
+  .page-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .page-navigation .btn {
+    width: 100%;
+  }
+  
+  .countdown {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .countdown-item {
+    flex: 0 0 calc(50% - 0.5rem);
+    max-width: calc(50% - 0.5rem);
+  }
+}

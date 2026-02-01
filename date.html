@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="When should we have our date? 💕">
+  <meta name="theme-color" content="#ff69b4">
+  
+  <title>Pick Our Date 💕</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+</head>
+<body>
+  <!-- Audio Toggle Button -->
+  <button id="audioToggle" class="audio-toggle" aria-label="Toggle music">
+    🔇
+  </button>
+
+  <!-- Background Music -->
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="assets/audio/bg-love-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Content -->
+  <main class="page-wrapper date-page">
+    <!-- Page Indicators -->
+    <div class="page-indicators animate-on-load">
+      <div class="page-indicator completed"></div>
+      <div class="page-indicator completed"></div>
+      <div class="page-indicator active"></div>
+      <div class="page-indicator"></div>
+      <div class="page-indicator"></div>
+      <div class="page-indicator"></div>
+    </div>
+
+    <!-- Question - Personalized -->
+    <h1 class="animate-on-load delay-1">When should we go, Flappy bird? 🐦📅</h1>
+    <p class="subtitle animate-on-load delay-1">Pick the perfect day for our date, Nainika!</p>
+
+    <!-- Date Picker -->
+    <div class="date-picker-wrapper animate-on-load delay-2">
+      <label for="dateInput">Select a date:</label>
+      <input 
+        type="date" 
+        id="dateInput" 
+        name="date"
+        required
+      >
+      
+      <!-- Quick Date Suggestions -->
+      <div class="date-suggestions">
+        <button type="button" class="date-suggestion" data-days="0">Today</button>
+        <button type="button" class="date-suggestion" data-days="1">Tomorrow</button>
+        <button type="button" class="date-suggestion" data-days="7">Next Week</button>
+        <button type="button" class="date-suggestion" data-days="14">Valentine's Day</button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="page-navigation animate-on-load delay-3">
+      <button id="backBtn" class="btn btn-back">
+        ← Back
+      </button>
+      <button id="nextBtn" class="btn btn-next" disabled>
+        Next →
+      </button>
+    </div>
+  </main>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay">
+    <div class="transition-heart">💕</div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  
+  <script>
+    /**
+     * Date Selection Page Logic
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      Utils.log('Date page loaded');
+      
+      const dateInput = Utils.$('#dateInput');
+      const nextBtn = Utils.$('#nextBtn');
+      const backBtn = Utils.$('#backBtn');
+      const suggestions = Utils.$$('.date-suggestion');
+      
+      // Set minimum date to today
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      dateInput.min = todayStr;
+      
+      // Set maximum date (1 year from now)
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 1);
+      dateInput.max = maxDate.toISOString().split('T')[0];
+      
+      // Load saved date if exists
+      const savedData = Navigation.getData();
+      if (savedData.selectedDate) {
+        dateInput.value = savedData.selectedDate;
+        nextBtn.disabled = false;
+      }
+      
+      // Date input change handler
+      dateInput.addEventListener('change', (e) => {
+        const selectedDate = e.target.value;
+        if (selectedDate) {
+          Navigation.saveDate(selectedDate);
+          nextBtn.disabled = false;
+          Utils.log(`Date selected: ${selectedDate}`);
+        } else {
+          nextBtn.disabled = true;
+        }
+      });
+      
+      // Quick date suggestions
+      suggestions.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const days = parseInt(btn.dataset.days);
+          const suggestedDate = new Date();
+          suggestedDate.setDate(suggestedDate.getDate() + days);
+          
+          // Special case for Valentine's Day suggestion
+          if (btn.textContent.includes("Valentine")) {
+            suggestedDate.setMonth(1); // February
+            suggestedDate.setDate(14);
+            // If Valentine's Day has passed this year, set next year
+            if (suggestedDate < today) {
+              suggestedDate.setFullYear(suggestedDate.getFullYear() + 1);
+            }
+          }
+          
+          const dateStr = suggestedDate.toISOString().split('T')[0];
+          dateInput.value = dateStr;
+          Navigation.saveDate(dateStr);
+          nextBtn.disabled = false;
+          
+          Utils.log(`Quick date selected: ${dateStr}`);
+        });
+      });
+      
+      // Navigation buttons
+      backBtn.addEventListener('click', () => {
+        Navigation.goTo('thankyou.html');
+      });
+      
+      nextBtn.addEventListener('click', () => {
+        if (dateInput.value) {
+          Navigation.goTo('food.html');
+        }
+      });
+      
+      // Setup audio
+      const audioToggle = Utils.$('#audioToggle');
+      const backgroundMusic = Utils.$('#backgroundMusic');
+      
+      if (audioToggle && backgroundMusic) {
+        const isMuted = Utils.loadData('musicPreference', true);
+        backgroundMusic.muted = isMuted;
+        backgroundMusic.volume = CONFIG.audio.volume;
+        audioToggle.textContent = isMuted ? '🔇' : '🔊';
+        audioToggle.classList.toggle('muted', isMuted);
+        
+        audioToggle.addEventListener('click', () => {
+          const newMuted = !backgroundMusic.muted;
+          backgroundMusic.muted = newMuted;
+          if (!newMuted) backgroundMusic.play().catch(console.log);
+          Utils.saveData('musicPreference', newMuted);
+          audioToggle.textContent = newMuted ? '🔇' : '🔊';
+          audioToggle.classList.toggle('muted', newMuted);
+        });
+      }
+      
+      // Floating hearts
+      if (CONFIG.animations.floatingHearts.enabled) {
+        const settings = CONFIG.animations.floatingHearts;
+        setInterval(() => {
+          const emoji = Utils.randomFrom(settings.emojis);
+          const heart = Utils.createElement('div', {
+            className: 'floating-heart medium',
+            style: { left: `${Math.random() * 100}vw` }
+          }, emoji);
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), settings.duration);
+        }, settings.interval);
+      }
+    });
+  </script>
+</body>
+</html>

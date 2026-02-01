@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Will you be my Valentine? A romantic interactive experience 💕">
+  <meta name="theme-color" content="#ff69b4">
+  
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Will You Be My Valentine? 💕">
+  <meta property="og:description" content="Someone has a special question for you...">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/og-image.jpg">
+  
+  <title>Will You Be My Valentine? 💕</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+</head>
+<body style="overflow: hidden; position: fixed; width: 100%; height: 100%;">
+  <!-- Audio Toggle Button -->
+  <button id="audioToggle" class="audio-toggle" aria-label="Toggle music">
+    🔇
+  </button>
+
+  <!-- Background Music -->
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="assets/audio/bg-love-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- GIF Display -->
+    <div class="gif-container animate-on-load">
+      <img 
+        id="gifDisplay" 
+        class="gif-display" 
+        src="assets/gifs/image1.gif" 
+        alt="Cute pleading face"
+        loading="eager"
+        onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'fallback-emoji\'>🥺</span>';"
+      >
+    </div>
+
+    <!-- Question Text - Personalized for Flappy bird (Nainika) 🐦 -->
+    <h1 id="questionText" class="question-text animate-on-load delay-1">
+      Will you be my Valentine, Flappy bird? 🐦💕
+    </h1>
+
+    <!-- Response Buttons -->
+    <div class="button-container animate-on-load delay-2">
+      <button id="yesButton" class="btn btn-yes bounce" aria-label="Yes, I'll be your Valentine">
+        Yes 💖
+      </button>
+      <button id="noButton" class="btn btn-no" aria-label="No">
+        No
+      </button>
+    </div>
+  </main>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay">
+    <div class="transition-heart">💕</div>
+  </div>
+
+  <!-- Canvas Confetti Library (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  
+  <!-- Application Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
