@@ -718,6 +718,13 @@ function setupAudio() {
   if (Elements.backgroundMusic) {
     Elements.backgroundMusic.volume = CONFIG.audio.volume;
     Elements.backgroundMusic.muted = savedMuted;
+    Elements.backgroundMusic.setAttribute('playsinline', '');
+    Elements.backgroundMusic.autoplay = !savedMuted;
+
+    if (!savedMuted && CONFIG.audio.forceAutoplay) {
+      attemptBackgroundMusicAutoplay();
+      registerAutoplayFallback();
+    }
   }
   
   updateAudioToggle(savedMuted);
@@ -730,13 +737,61 @@ function toggleAudio() {
   Elements.backgroundMusic.muted = isMuted;
   
   if (!isMuted) {
-    Elements.backgroundMusic.play().catch(err => {
-      Utils.logError('Failed to play audio', err);
-    });
+    Elements.backgroundMusic.play()
+      .then(() => {
+        State.audioPlaying = true;
+      })
+      .catch(err => {
+        Utils.logError('Failed to play audio', err);
+      });
+  } else {
+    State.audioPlaying = false;
   }
   
   Utils.saveData('musicPreference', isMuted);
   updateAudioToggle(isMuted);
+}
+
+function attemptBackgroundMusicAutoplay() {
+  if (!Elements.backgroundMusic) return;
+  Elements.backgroundMusic.play()
+    .then(() => {
+      State.audioPlaying = true;
+      Utils.log('Background music autoplayed successfully');
+      unregisterAutoplayFallback();
+    })
+    .catch(err => {
+      State.audioPlaying = false;
+      Utils.logError('Autoplay blocked - waiting for user interaction', err);
+    });
+}
+
+let autoplayFallbackRegistered = false;
+let autoplayFallbackHandler = null;
+const autoplayFallbackEvents = ['pointerdown', 'keydown'];
+
+function registerAutoplayFallback() {
+  if (autoplayFallbackRegistered) return;
+  autoplayFallbackHandler = () => {
+    attemptBackgroundMusicAutoplay();
+  };
+
+  autoplayFallbackEvents.forEach(evt => {
+    document.addEventListener(evt, autoplayFallbackHandler, { once: true });
+  });
+
+  autoplayFallbackRegistered = true;
+}
+
+function unregisterAutoplayFallback() {
+  if (!autoplayFallbackRegistered) return;
+  autoplayFallbackEvents.forEach(evt => {
+    if (autoplayFallbackHandler) {
+      document.removeEventListener(evt, autoplayFallbackHandler, { once: true });
+    }
+  });
+  autoplayFallbackHandler = null;
+  autoplayFallbackRegistered = false;
 }
 
 function updateAudioToggle(isMuted) {

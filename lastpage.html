@@ -107,7 +107,12 @@
         <button id="screenshotBtn" class="share-btn screenshot">
           📸 Save as Image
         </button>
+        <button id="emailSummary" class="share-btn email">
+          📧 Email me the plan
+        </button>
       </div>
+
+      <p id="emailStatus" class="email-status" role="status" aria-live="polite"></p>
 
       <!-- Reset Section -->
       <div class="reset-section animate-on-load delay-4">
@@ -289,18 +294,18 @@
       const whatsappBtn = Utils.$('#whatsappShare');
       if (whatsappBtn) {
         whatsappBtn.addEventListener('click', () => {
-          const summary = Navigation.getSummary();
+          const details = buildSummaryDetails();
           const message = `${CONFIG.sharing.shareMessage}\n\n` +
             `💕 Our Valentine's Date Plan:\n` +
-            `📅 Date: ${summary.formattedDate}\n` +
-            `🍽️ Food: ${summary.food.join(', ') || 'Surprise!'}\n` +
-            `🍰 Dessert: ${summary.dessert.join(', ') || 'Surprise!'}\n` +
-            `🎯 Activities: ${summary.activities.join(', ') || 'Surprise!'}\n\n` +
-            `They said YES after ${summary.noClickCount} attempts! 😄`;
-          
+            `📅 Date: ${details.summary.formattedDate}\n` +
+            `🍽️ Food: ${formatSelectionList(details.foodLabels)}\n` +
+            `🍰 Dessert: ${formatSelectionList(details.dessertLabels)}\n` +
+            `🎯 Activities: ${formatSelectionList(details.activityLabels)}\n\n` +
+            `They said YES after ${details.summary.noClickCount} attempts! 😄`;
+
           const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
           window.open(url, '_blank');
-          
+
           Utils.log('Shared on WhatsApp');
         });
       }
@@ -349,6 +354,125 @@
           }
         });
       }
+
+      const emailBtn = Utils.$('#emailSummary');
+      const emailStatus = Utils.$('#emailStatus');
+
+      if (emailBtn) {
+        if (!CONFIG.email.enabled) {
+          emailBtn.style.display = 'none';
+          if (emailStatus) {
+            emailStatus.style.display = 'none';
+          }
+        } else {
+          emailBtn.addEventListener('click', async () => {
+            const details = buildSummaryDetails();
+            const { summary, foodLabels, dessertLabels, activityLabels } = details;
+
+            const lines = [
+              'Hi Nitin! 💌',
+              "Here's the Valentine date plan straight from your website:",
+              '',
+              `📅 Date: ${summary.formattedDate}`,
+              `😄 Chase Count: ${summary.noClickCount}`,
+              `🍽️ Food: ${formatSelectionList(foodLabels)}`,
+              `🍰 Dessert: ${formatSelectionList(dessertLabels)}`,
+              `🎯 Activities: ${formatSelectionList(activityLabels)}`,
+              '',
+              `Final Message: ${CONFIG.finalMessage}`,
+              '',
+              'Sent with 💖 from your Valentine experience.'
+            ];
+
+            const payload = {
+              _subject: CONFIG.email.subject,
+              message: lines.join('\n'),
+              date: summary.formattedDate,
+              no_clicks: summary.noClickCount,
+              _captcha: 'false'
+            };
+
+            let endpoint = '';
+
+            if (CONFIG.email.provider === 'formspree') {
+              endpoint = `https://formspree.io/f/${CONFIG.email.formspreeId}`;
+              payload.email = CONFIG.email.recipient;
+            } else {
+              endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(CONFIG.email.recipient)}`;
+            }
+            const originalText = emailBtn.textContent;
+
+            emailBtn.disabled = true;
+            emailBtn.textContent = 'Sending...';
+
+            if (emailStatus) {
+              emailStatus.textContent = 'Sending your plan...';
+              emailStatus.classList.remove('success', 'error');
+              emailStatus.style.display = 'block';
+            }
+
+            try {
+              const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+              });
+
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+              }
+
+              const data = await response.json();
+
+              if (emailStatus) {
+                emailStatus.textContent = CONFIG.email.successMessage;
+                emailStatus.classList.add('success');
+              }
+
+              Utils.log('Summary email sent', 'log', data);
+            } catch (error) {
+              if (emailStatus) {
+                emailStatus.textContent = CONFIG.email.errorMessage;
+                emailStatus.classList.add('error');
+              }
+              Utils.logError('Failed to send summary email', error);
+            } finally {
+              emailBtn.disabled = false;
+              emailBtn.textContent = originalText;
+            }
+          });
+        }
+      }
+    }
+
+    function buildSummaryDetails() {
+      const summary = Navigation.getSummary();
+      return {
+        summary,
+        foodLabels: mapIdsToLabels(summary.food, CONFIG.foodOptions),
+        dessertLabels: mapIdsToLabels(summary.dessert, CONFIG.dessertOptions),
+        activityLabels: mapIdsToLabels(summary.activities, CONFIG.activityOptions)
+      };
+    }
+
+    function mapIdsToLabels(ids, options) {
+      if (!ids || !options) return [];
+      return ids
+        .map(id => {
+          const match = options.find(opt => opt.id === id);
+          return match ? match.label : null;
+        })
+        .filter(Boolean);
+    }
+
+    function formatSelectionList(items) {
+      if (!items || items.length === 0) {
+        return 'Surprise!';
+      }
+      return items.join(', ');
     }
     
     /**

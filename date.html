@@ -63,7 +63,7 @@
         <button type="button" class="date-suggestion" data-days="0">Today</button>
         <button type="button" class="date-suggestion" data-days="1">Tomorrow</button>
         <button type="button" class="date-suggestion" data-days="7">Next Week</button>
-        <button type="button" class="date-suggestion" data-days="14">Valentine's Day</button>
+        <button type="button" class="date-suggestion" data-fixed="valentine">Valentine's Day</button>
       </div>
     </div>
 
@@ -102,13 +102,16 @@
       
       // Set minimum date to today
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      today.setHours(0, 0, 0, 0);
+      const todayStr = formatToInputValue(today);
       dateInput.min = todayStr;
       
       // Set maximum date (1 year from now)
-      const maxDate = new Date();
+      const maxDate = new Date(today);
       maxDate.setFullYear(maxDate.getFullYear() + 1);
-      dateInput.max = maxDate.toISOString().split('T')[0];
+      maxDate.setHours(23, 59, 59, 999);
+      const maxDateStr = formatToInputValue(maxDate);
+      dateInput.max = maxDateStr;
       
       // Load saved date if exists
       const savedData = Navigation.getData();
@@ -132,21 +135,27 @@
       // Quick date suggestions
       suggestions.forEach(btn => {
         btn.addEventListener('click', () => {
-          const days = parseInt(btn.dataset.days);
-          const suggestedDate = new Date();
-          suggestedDate.setDate(suggestedDate.getDate() + days);
-          
-          // Special case for Valentine's Day suggestion
-          if (btn.textContent.includes("Valentine")) {
-            suggestedDate.setMonth(1); // February
-            suggestedDate.setDate(14);
-            // If Valentine's Day has passed this year, set next year
-            if (suggestedDate < today) {
-              suggestedDate.setFullYear(suggestedDate.getFullYear() + 1);
+          let targetDate = new Date(today);
+          targetDate.setHours(12, 0, 0, 0);
+
+          if (btn.dataset.fixed === 'valentine') {
+            targetDate.setMonth(1); // February (0-indexed)
+            targetDate.setDate(14);
+            if (targetDate < today) {
+              targetDate.setFullYear(targetDate.getFullYear() + 1);
+            }
+          } else if (btn.dataset.days) {
+            const days = parseInt(btn.dataset.days, 10);
+            if (!Number.isNaN(days)) {
+              targetDate.setDate(targetDate.getDate() + days);
             }
           }
-          
-          const dateStr = suggestedDate.toISOString().split('T')[0];
+
+          if (targetDate > maxDate) {
+            targetDate = new Date(maxDate);
+          }
+
+          const dateStr = formatToInputValue(targetDate);
           dateInput.value = dateStr;
           Navigation.saveDate(dateStr);
           nextBtn.disabled = false;
@@ -154,6 +163,13 @@
           Utils.log(`Quick date selected: ${dateStr}`);
         });
       });
+
+      function formatToInputValue(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
       
       // Navigation buttons
       backBtn.addEventListener('click', () => {

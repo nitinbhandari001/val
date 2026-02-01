@@ -26,14 +26,14 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
 </head>
-<body style="overflow: hidden; position: fixed; width: 100%; height: 100%;">
+<body class="page-home" style="overflow: hidden; position: fixed; width: 100%; height: 100%;">
   <!-- Audio Toggle Button -->
   <button id="audioToggle" class="audio-toggle" aria-label="Toggle music">
     🔇
   </button>
 
   <!-- Background Music -->
-  <audio id="backgroundMusic" loop preload="auto">
+  <audio id="backgroundMusic" loop preload="auto" autoplay playsinline>
     <source src="assets/audio/bg-love-music.mp3" type="audio/mpeg">
   </audio>
 

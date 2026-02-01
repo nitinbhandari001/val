@@ -199,7 +199,53 @@ const CONFIG = {
     /**
      * Volume level (0.0 to 1.0)
      */
-    volume: 0.5
+    volume: 0.5,
+
+    /**
+     * Force autoplay attempts on page load (will register fallbacks)
+     */
+    forceAutoplay: true
+  },
+
+  // ==========================================
+  // EMAIL SETTINGS
+  // ==========================================
+  
+  email: {
+    /**
+     * Toggle email delivery from the final page
+     */
+    enabled: true,
+
+    /**
+     * Email delivery provider (currently supports 'formsubmit')
+     */
+    provider: "formspree",
+
+    /**
+     * Formspree form ID (used when provider === 'formspree')
+     */
+    formspreeId: "meezgnap",
+
+    /**
+     * Destination email address (update this to your inbox!)
+     */
+    recipient: "nitinbhandari.24jun@gmail.com",
+
+    /**
+     * Subject line for the summary email
+     */
+    subject: "Our Valentine Plan 💕",
+
+    /**
+     * Success message shown after email is sent
+     */
+    successMessage: "Summary sent! Check your inbox 💌",
+
+    /**
+     * Error message shown if email fails
+     */
+    errorMessage: "Couldn't send the email. Please try again in a moment."
   },
   
   // ==========================================
@@ -304,7 +350,8 @@ const CONFIG = {
     { id: "steak", label: "Steak 🥩", image: "assets/images/steak.jpeg" },
     { id: "salad", label: "Salad 🥗", image: "assets/images/salad.jpeg" },
     { id: "dumplings", label: "Dumplings 🥟", image: "assets/images/dumplings.jpeg" },
-    { id: "hotdog", label: "Hot Dog 🌭", image: "assets/images/dog.jpeg" }
+    { id: "hotdog", label: "Hot Dog 🌭", image: "assets/images/dog.jpeg" },
+    { id: "me", label: "ME 😎", image: "assets/images/lipbiting.gif" }
   ],
   
   /**
@@ -316,7 +363,8 @@ const CONFIG = {
     { id: "mochi", label: "Mochi 🍡", image: "assets/images/mochi.jpeg" },
     { id: "taiyaki", label: "Taiyaki 🐟", image: "assets/images/taiyaki.jpeg" },
     { id: "che", label: "Che 🍨", image: "assets/images/che.jpeg" },
-    { id: "bun", label: "Sweet Bun 🥐", image: "assets/images/randombun.jpeg" }
+    { id: "bun", label: "Sweet Bun 🥐", image: "assets/images/randombun.jpeg" },
+    { id: "mesweet", label: "ME 😎", image: "assets/images/lipbiting.gif" }
   ],
   
   /**
@@ -328,7 +376,8 @@ const CONFIG = {
     { id: "park", label: "Walk in Park 🌳", image: "assets/images/park.jpeg" },
     { id: "arcade", label: "Arcade 🎮", image: "assets/images/arcade.jpeg" },
     { id: "kunsthalle", label: "Art Exhibition 🖼️", image: "assets/images/kunsthalle.jpeg" },
-    { id: "ceramics", label: "Ceramics Class 🏺", image: "assets/images/keramika.jpeg" }
+    { id: "ceramics", label: "Ceramics Class 🏺", image: "assets/images/keramika.jpeg" },
+    { id: "meactivity", label: "ME 😎", image: "assets/images/lipbiting.gif" }
   ],
   
   // ==========================================
@@ -375,6 +424,7 @@ Object.freeze(CONFIG);
 Object.freeze(CONFIG.buttons);
 Object.freeze(CONFIG.mobile);
 Object.freeze(CONFIG.audio);
+Object.freeze(CONFIG.email);
 Object.freeze(CONFIG.animations);
 Object.freeze(CONFIG.colors);
 
