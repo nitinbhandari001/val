@@ -347,7 +347,6 @@ const CONFIG = {
     { id: "ramen", label: "Ramen 🍜", image: "assets/images/ramen.jpeg" },
     { id: "burger", label: "Burgers 🍔", image: "assets/images/burgers.jpeg" },
     { id: "pizza", label: "Pizza 🍕", image: "assets/images/pizza.jpeg" },
-    { id: "steak", label: "Steak 🥩", image: "assets/images/steak.jpeg" },
     { id: "salad", label: "Salad 🥗", image: "assets/images/salad.jpeg" },
     { id: "dumplings", label: "Dumplings 🥟", image: "assets/images/dumplings.jpeg" },
     { id: "hotdog", label: "Hot Dog 🌭", image: "assets/images/dog.jpeg" },
@@ -358,12 +357,12 @@ const CONFIG = {
    * Dessert options for selection page
    */
   dessertOptions: [
+    { id: "mochi", label: "Mochi 🍡", image: "assets/images/mochi.jpeg" },
+    { id: "icecream", label: "Ice Cream 🐟", image: "assets/images/taiyaki.jpeg" },
+    { id: "tiramisu", label: "Tiramisu 🍨", image: "assets/images/tiramisu.jpg" },
+    { id: "brownie", label: "Sizzling Brownie 🥐", image: "assets/images/brownie.jpg" },
     { id: "boba", label: "Boba Tea 🧋", image: "assets/images/boba.jpeg" },
     { id: "churros", label: "Churros 🥐", image: "assets/images/churro.jpeg" },
-    { id: "mochi", label: "Mochi 🍡", image: "assets/images/mochi.jpeg" },
-    { id: "taiyaki", label: "Taiyaki 🐟", image: "assets/images/taiyaki.jpeg" },
-    { id: "che", label: "Che 🍨", image: "assets/images/che.jpeg" },
-    { id: "bun", label: "Sweet Bun 🥐", image: "assets/images/randombun.jpeg" },
     { id: "mesweet", label: "ME 😎", image: "assets/images/lipbiting.gif" }
   ],
   
@@ -376,7 +375,7 @@ const CONFIG = {
     { id: "park", label: "Walk in Park 🌳", image: "assets/images/park.jpeg" },
     { id: "arcade", label: "Arcade 🎮", image: "assets/images/arcade.jpeg" },
     { id: "kunsthalle", label: "Art Exhibition 🖼️", image: "assets/images/kunsthalle.jpeg" },
-    { id: "ceramics", label: "Ceramics Class 🏺", image: "assets/images/keramika.jpeg" },
+    { id: "cats", label: "Cat Cafe 🐱", image: "assets/images/cat.jpg" },
     { id: "meactivity", label: "ME 😎", image: "assets/images/lipbiting.gif" }
   ],
   
