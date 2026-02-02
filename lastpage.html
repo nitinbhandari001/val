@@ -141,6 +141,7 @@
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/navigation.js"></script>
+  <script src="js/email.js"></script>
   
   <script>
     /**
@@ -158,6 +159,17 @@
       if (chaseCount) {
         chaseCount.textContent = summary.noClickCount;
       }
+      
+      // Send email with summary data after page loads
+      setTimeout(async () => {
+        try {
+          console.log('Sending email with summary data:', summary);
+          const emailSent = await sendEmail(summary);
+          console.log('Email sent successfully:', emailSent);
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      }, 1000); // Small delay to ensure page is fully loaded
       
       // Populate date
       const dateDisplay = Utils.$('#dateDisplay');

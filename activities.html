@@ -181,37 +181,47 @@
             return false;
           }
 
+          // Get the complete summary data that we see in the console
+          const summaryData = {
+            noClickCount: Navigation.getData().noClickCount || 0,
+            acceptedAt: Navigation.getData().acceptedAt ? new Date(Navigation.getData().acceptedAt) : null,
+            date: Navigation.getData().selectedDate,
+            formattedDate: Navigation.getData().selectedDate ? Utils.formatDate(Navigation.getData().selectedDate) : 'Not selected',
+            food: Navigation.getData().selectedFood || [],
+            dessert: Navigation.getData().selectedDessert || [],
+            activities: Navigation.getData().selectedActivities || [],
+            countdown: Navigation.getData().selectedDate ? Utils.getTimeRemaining(Navigation.getData().selectedDate) : null
+          };
+          
+          console.log('Using summary data:', summaryData);
+
           const details = {
             summary: {
-              formattedDate: new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              }),
-              noClickCount: Utils.loadData('noClickCount', 0)
+              formattedDate: summaryData.formattedDate,
+              noClickCount: summaryData.noClickCount,
+              acceptedAt: summaryData.acceptedAt
             },
-            foodLabels: mapIdsToLabels(Utils.loadData('selectedFoods', []), CONFIG.foodOptions || []),
-            dessertLabels: mapIdsToLabels(Utils.loadData('selectedDesserts', []), CONFIG.dessertOptions || []),
-            activityLabels: mapIdsToLabels(selectedActivities, CONFIG.activityOptions || [])
+            foodLabels: mapIdsToLabels(summaryData.food, CONFIG.foodOptions || []),
+            dessertLabels: mapIdsToLabels(summaryData.dessert, CONFIG.dessertOptions || []),
+            activityLabels: mapIdsToLabels(summaryData.activities, CONFIG.activityOptions || [])
           };
 
           const { summary, foodLabels, dessertLabels, activityLabels } = details;
           console.log('Preparing email with details:', details);
 
           const lines = [
-            'Hi! ',
-            "Here's the Valentine date plan:",
+            'Hi Nitin! 💌',
+            "Here's the Valentine date plan straight from your website:",
             '',
-            ` Date: ${summary.formattedDate}`,
-            ` Chase Count: ${summary.noClickCount}`,
-            ` Food: ${formatSelectionList(foodLabels)}`,
-            ` Dessert: ${formatSelectionList(dessertLabels)}`,
-            ` Activities: ${formatSelectionList(activityLabels)}`,
+            `📅 Date: ${summary.formattedDate}`,
+            `😄 Chase Count: ${summary.noClickCount}`,
+            `🍽️ Food: ${formatSelectionList(foodLabels)}`,
+            `🍰 Dessert: ${formatSelectionList(dessertLabels)}`,
+            `🎯 Activities: ${formatSelectionList(activityLabels)}`,
             '',
-            `Final Message: ${CONFIG.finalMessage || ' '}`,
+            `Final Message: ${CONFIG.finalMessage || '❤️'}`,
             '',
-            'Sent with  from your Valentine experience.'
+            'Sent with 💖 from your Valentine experience.'
           ];
 
           const payload = {
@@ -281,28 +291,10 @@
       }
 
       // Next button click handler
-      nextBtn.addEventListener('click', async () => {
+      nextBtn.addEventListener('click', () => {
         Navigation.markCompleted();
-        try {
-          // Show loading state
-          nextBtn.disabled = true;
-          nextBtn.textContent = 'Sending...';
-          
-          // Send email
-          const emailSent = await sendEmail();
-          console.log('Email sent:', emailSent);
-          
-          // Navigate to last page regardless of email success
-          Navigation.goTo('lastpage.html');
-        } catch (error) {
-          console.error('Error in next button handler:', error);
-          // Still navigate even if there's an error with email
-          Navigation.goTo('lastpage.html');
-        } finally {
-          // Reset button state in case navigation doesn't happen
-          nextBtn.disabled = false;
-          nextBtn.textContent = 'See Our Plan! 💕';
-        }
+        // Navigate to last page
+        Navigation.goTo('lastpage.html');
       });
       
       // Setup audio
