@@ -171,10 +171,138 @@
       backBtn.addEventListener('click', () => {
         Navigation.goTo('dessert.html');
       });
-      
-      nextBtn.addEventListener('click', () => {
+
+      // Function to send email
+      async function sendEmail() {
+        try {
+          console.log('sendEmail called');
+          if (!CONFIG.email || !CONFIG.email.enabled) {
+            console.log('Email not enabled in config');
+            return false;
+          }
+
+          const details = {
+            summary: {
+              formattedDate: new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              }),
+              noClickCount: Utils.loadData('noClickCount', 0)
+            },
+            foodLabels: mapIdsToLabels(Utils.loadData('selectedFoods', []), CONFIG.foodOptions || []),
+            dessertLabels: mapIdsToLabels(Utils.loadData('selectedDesserts', []), CONFIG.dessertOptions || []),
+            activityLabels: mapIdsToLabels(selectedActivities, CONFIG.activityOptions || [])
+          };
+
+          const { summary, foodLabels, dessertLabels, activityLabels } = details;
+          console.log('Preparing email with details:', details);
+
+          const lines = [
+            'Hi! ',
+            "Here's the Valentine date plan:",
+            '',
+            ` Date: ${summary.formattedDate}`,
+            ` Chase Count: ${summary.noClickCount}`,
+            ` Food: ${formatSelectionList(foodLabels)}`,
+            ` Dessert: ${formatSelectionList(dessertLabels)}`,
+            ` Activities: ${formatSelectionList(activityLabels)}`,
+            '',
+            `Final Message: ${CONFIG.finalMessage || ' '}`,
+            '',
+            'Sent with  from your Valentine experience.'
+          ];
+
+          const payload = {
+            _subject: CONFIG.email.subject || 'Your Valentine Date Plan',
+            message: lines.join('\n'),
+            date: summary.formattedDate,
+            no_clicks: summary.noClickCount,
+            _captcha: 'false'
+          };
+
+          let endpoint = '';
+          console.log('Using email provider:', CONFIG.email.provider);
+
+          if (CONFIG.email.provider === 'formspree' && CONFIG.email.formspreeId) {
+            endpoint = `https://formspree.io/f/${CONFIG.email.formspreeId}`;
+            payload.email = CONFIG.email.recipient || '';
+            console.log('Using Formspree endpoint:', endpoint);
+          } else if (CONFIG.email.recipient) {
+            endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(CONFIG.email.recipient)}`;
+            console.log('Using FormSubmit endpoint:', endpoint);
+          } else {
+            console.error('No valid email configuration found');
+            return false;
+          }
+
+          console.log('Sending email with payload:', payload);
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          console.log('Email send response status:', response.status);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Email send failed:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+          }
+
+          const result = await response.json();
+          console.log('Email send successful:', result);
+          return true;
+          
+        } catch (error) {
+          console.error('Error in sendEmail:', error);
+          return false;
+        }
+      }
+
+      // Helper functions
+      function mapIdsToLabels(ids, options) {
+        if (!ids || !options) return [];
+        return ids.map(id => {
+          const option = options.find(opt => opt.id === id);
+          return option ? option.label : id;
+        });
+      }
+
+      function formatSelectionList(items) {
+        if (!items || items.length === 0) return 'None selected';
+        if (items.length === 1) return items[0];
+        return items.join(', ');
+      }
+
+      // Next button click handler
+      nextBtn.addEventListener('click', async () => {
         Navigation.markCompleted();
-        Navigation.goTo('lastpage.html');
+        try {
+          // Show loading state
+          nextBtn.disabled = true;
+          nextBtn.textContent = 'Sending...';
+          
+          // Send email
+          const emailSent = await sendEmail();
+          console.log('Email sent:', emailSent);
+          
+          // Navigate to last page regardless of email success
+          Navigation.goTo('lastpage.html');
+        } catch (error) {
+          console.error('Error in next button handler:', error);
+          // Still navigate even if there's an error with email
+          Navigation.goTo('lastpage.html');
+        } finally {
+          // Reset button state in case navigation doesn't happen
+          nextBtn.disabled = false;
+          nextBtn.textContent = 'See Our Plan! 💕';
+        }
       });
       
       // Setup audio
